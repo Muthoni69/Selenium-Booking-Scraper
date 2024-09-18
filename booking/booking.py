@@ -6,7 +6,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import StaleElementReferenceException, ElementNotInteractableException
+from selenium.common.exceptions import StaleElementReferenceException, ElementNotInteractableException, TimeoutException
 
 
 import booking.constants as const
@@ -33,19 +33,31 @@ class Booking:
     def land_first_page(self):
         self.driver.get(const.BASE_URL)
 
-    def close_any_popups(self):
+    # def close_any_popups(self):
+    #
+    #     try:
+    #         wait = WebDriverWait(self.driver, 10)
+    #         close_signin_popup = wait.until(
+    #             EC.visibility_of_element_located((By.CSS_SELECTOR, "button[aria-label='Dismiss sign-in info.']")))
+    #         close_signin_popup.click()
+    #         print('Pop up closed')
+    #
+    #
+    #     except:
+    #         pass
 
-        #pop_up_closed = False
+    def close_any_popups(self):
         try:
             wait = WebDriverWait(self.driver, 10)
             close_signin_popup = wait.until(
-                EC.visibility_of_element_located((By.CSS_SELECTOR, "button[aria-label='Dismiss sign-in info.']")))
+                EC.visibility_of_element_located((By.CSS_SELECTOR, "button[aria-label='Dismiss sign-in info.']"))
+            )
             close_signin_popup.click()
             print('Pop up closed')
-            #pop_up_closed = True
 
-        except:
-            pass
+        except (TimeoutException, NoSuchElementException) as e:
+            print(f"No pop-up found or an error occurred: {e}")
+
     #
     #     try:
     #         accept_cookies_button = self.driver.find_element(By.XPATH, "//button[text()='Accept']")
@@ -80,7 +92,7 @@ class Booking:
 
 
     def which_country(self, place_to_go):
-        self.close_any_popups()
+        # self.close_any_popups()
 
         wait = WebDriverWait(self.driver, 15)
 
@@ -105,7 +117,7 @@ class Booking:
                 first_result.click()
                 break
             except (ElementNotInteractableException, StaleElementReferenceException, ElementClickInterceptedException):
-                self.driver.execute_script("arguments.scrollIntoView(true);", first_result)
+                self.driver.execute_script("arguments.scrollIntoView();", first_result)
 
     def select_dates(self, check_in, check_out):
         check_in_element = self.driver.find_element(By.CSS_SELECTOR, f'span[data-date="{check_in}"]')
