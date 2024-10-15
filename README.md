@@ -22,8 +22,8 @@ A simple yet powerful web scraping tool built with Selenium, designed specifical
 
 1. **Clone this repository:**
    ```bash
-    git clone [https://github.com/AbdulrahmanBaiasy/selenium-booking-scraper]
-    cd selenium-booking-scraper
+    git clone [https://github.com/Muthoni6/Selenium-Booking-Scraper]
+    cd Selenium-Booking-Scraper
    ```
 2. **Install dependencies**
     ```bash
